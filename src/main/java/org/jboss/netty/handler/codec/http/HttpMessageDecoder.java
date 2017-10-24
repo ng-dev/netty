@@ -284,7 +284,11 @@ public abstract class HttpMessageDecoder extends ReplayingDecoder<State> {
             //
             // See https://github.com/netty/netty/issues/433
             if (readLimit == 0) {
-                return null;
+                if (channel.isConnected()) {
+                    return null;
+                } else {
+                    return HttpChunk.LAST_CHUNK;
+                }
             }
 
             int toRead = readLimit;
